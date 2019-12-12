@@ -1,0 +1,28 @@
+{
+  "name": "listing-webpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anxoret/listing.git"
+  },
+  "keywords": [
+    "javascript",
+    "js",
+    "webpack"
+  ],
+  "author": "anxoret",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anxoret/listing/issues"
+  },
+  "homepage": "https://github.com/anxoret/listing#readme",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}
