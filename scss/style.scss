@@ -1,0 +1,55 @@
+@import "variables";
+
+* {
+    padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+.slideshow__container_theme_original {
+    position: relative;
+    height: 215px;
+    width: 475px;
+    margin: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(0,0,0,0.35);
+}
+
+.slideshow__img-container_theme_original {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 1s;
+}
+
+.slideshow__img-container_show {
+    opacity: 1;
+    z-index: 2;
+}
+
+.slideshow__button_theme_original {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    margin: 10px;
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    background-color: $buttonBackgroundColor;
+    z-index: 3;
+}
+
+.slideshow__button_left {
+    left: 0;
+}
+
+.slideshow__button_right {
+    right: 0;
+    transform: rotate(180deg);
+}
