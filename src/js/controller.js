@@ -1,29 +1,56 @@
 "use strict"
 
-// view
+// view => slideshow.js
 const vShowImage = () => {
     
 };
 
-const vGetImagesSrc = (imagesHtmlClass) => {
-    let imagesSrc = [];
-    let images = document.querySelectorAll(imagesHtmlClass);
+const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
+    let mainContent = document.querySelector(".main-content");
 
-    images.forEach( (image) => {
-        let src = image.getAttribute("src");
-        imagesSrc.push(src);
+    let slideshow = document.createElement("section");
+    slideshow.className = "slideshow slideshow_theme_original";
+    mainContent.append(slideshow);
+
+    let slideshowContainer = document.createElement("div");
+    slideshowContainer.className = "slideshow__container slideshow__container_theme_original";
+    slideshow.append(slideshowContainer);
+
+    let slideshowImgContainer = document.createElement("div");
+    slideshowImgContainer.className = "slideshow__img-container slideshow__img-container_theme_original";
+    slideshowContainer.append(slideshowImgContainer);
+
+    arrayOfImages.forEach( (image, imageNumber) => {
+        let slideshowImg = document.createElement("img");
+
+        if (imageNumber == shownImageNumber) {
+            slideshowImg.className = "slideshow__img-container slideshow__img-container_theme_original slideshow__img-container_show"
+        } else {
+            slideshowImg.className = "slideshow__img slideshow__img_theme_original";
+        }
+        
+        for (attributeName in image) {
+            slideshowImg.setAttribute(attributeName, image[attributeName]);
+        }
+        
+        slideshowImgContainer.append(slideshowImg); 
     });
 
-    return imagesSrc;
+    let slideshowButtonLeft = document.createElement("button");
+    slideshowButtonLeft.className = "slideshow__button slideshow__button_theme_original slideshow__button_left";
+    slideshowContainer.append(slideshowButtonLeft);
 };
 
-// controller
-const cCreateSlideshow = () => {
-
+// controller => slideshow.js
+const cCreateSlideshow = (arrayOfImages, shownImage) => {
+    mCreateSlideshow(arrayOfImages, shownImage);
+    vCreateSlideshow(
+        mGetSlideshow(), mGetSlideshowShownImage()
+    );
 };
 
 const cShowImage = (imagesObject) => {
-    let currentShownImage = slideshowImages.getShownImage();
+    let currentShownImage = imagesObject.getShownImage();
     vShowImage(currentShownImage);     
 };
 
@@ -37,15 +64,11 @@ const cShowNextImage = () => {
     vShowImage(slideshowImages);     
 };
 
-const cGetImagesSrc = (imagesClass) => {
-    return vGetImagesSrc(imagesClass);
-};
-
-// model
+// model => slideshow.js 
 class MImages {
-    constructor () {
-        this.array = [];
-        this.shownImage = null;
+    constructor (array, shownImage) {
+        this.array = array || [];
+        this.shownImage = shownImage || null;
     }
 
     setImageArray(array) {
@@ -67,6 +90,20 @@ class MImages {
     }
 };
 
+let mSlideshow = {};
+
+const mCreateSlideshow = (arrayOfImages, shownImage) => {
+    mSlideshow = new MImages(arrayOfImages, shownImage);
+};
+
+const mGetSlideshow = () => {
+    return mSlideshow.getImagesArray();
+};
+
+const mGetSlideshowShownImage = () => {
+    return mSlideshow.getShownImage();
+};
+
 const mChangeShownImage = (imagesObject, number) => {
     let currentShownImage = imagesObject.getShownImage();
 
@@ -82,12 +119,43 @@ const mChangeShownImage = (imagesObject, number) => {
     } 
 };
 
-let slideshowImages = new MImages;
-slideshowImages.setImageArray(vGetImagesSrc(".slideshow__img-container .slideshow__img"));
+// slideshow.js => main.js
+let arrayOfImages = [
+    {src: "./img/banner-0.png", alt: "banner-0"},
+    {src: "./img/banner-1.png", alt: "banner-1"},
+    {src: "./img/banner-2.png", alt: "banner-2"},
+    {src: "./img/banner-3.png", alt: "banner-3"},
+    {src: "./img/banner-0.png", alt: "banner-0"},
+    {src: "./img/banner-1.png", alt: "banner-1"},
+    {src: "./img/banner-2.png", alt: "banner-2"},
+    {src: "./img/banner-3.png", alt: "banner-3"},
+    {src: "./img/banner-0.png", alt: "banner-0"},
+    {src: "./img/banner-1.png", alt: "banner-1"},
+    {src: "./img/banner-0.png", alt: "banner-0"},
+    {src: "./img/banner-1.png", alt: "banner-1"},
+    {src: "./img/banner-2.png", alt: "banner-2"},
+    {src: "./img/banner-3.png", alt: "banner-3"},
+    {src: "./img/banner-0.png", alt: "banner-0"},
+    {src: "./img/banner-1.png", alt: "banner-1"},
+    {src: "./img/banner-2.png", alt: "banner-2"},
+    {src: "./img/banner-3.png", alt: "banner-3"},
+    {src: "./img/banner-0.png", alt: "banner-0"},
+    {src: "./img/banner-1.png", alt: "banner-1"},
+]
 
-// main
-let slideshowLeftButton = document.querySelector(".slideshow__button_left"); 
+let slideshowImages = cCreateSlideshow(arrayOfImages, 1);
 
-slideshowLeftButton.addEventListener("click", () => {
-    showPreviousImage();
-});
+
+
+
+
+
+
+
+
+
+// let slideshowLeftButton = document.querySelector(".slideshow__button_left"); 
+
+// slideshowLeftButton.addEventListener("click", () => {
+//     showPreviousImage();
+// });
