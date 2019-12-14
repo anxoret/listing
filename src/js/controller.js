@@ -4,7 +4,13 @@
 // сделать дозированность изображений в слайдшоу
 
 // view => slideshow.js
+let vCurrentShownImageNumber;
+let vSlideshowLength;
+
 const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
+    vCurrentShownImageNumber = shownImageNumber;
+    vSlideshowLength = arrayOfImages.length;
+
     let mainContent = document.querySelector(".main-content");
 
     let slideshow = document.createElement("section");
@@ -65,9 +71,21 @@ const vShowSlideshowImage = (imageToShow) => {
     imageContainerToShow.classList.add("slideshow__img-container_show");
 };
 
+vCurrentShownImageNumber = shownImageNumber;
+vSlideshowLength = arrayOfImages.length;
+
+// const vCheckSlideshowImageNumber = (imaNumber) => {
+//     if ()
+// };
+
+const vStopButtonClickEvent = () => {
+    
+};
+
 const vHangClicksOnSlideshowButtons = () => {
     let slideshowLeftButton = document.querySelector(".slideshow__button_left");
     slideshowLeftButton.addEventListener("click", () => {
+        
         cShowPreviousSlideshowImage();
     });
 
@@ -85,6 +103,10 @@ const cCreateSlideshow = (arrayOfImages, shownImage) => {
     vCreateSlideshow(
         mGetSlideshow(), mGetSlideshowShownImage()
     );
+};
+
+const cGetSlideshowLength = () => {
+    return mGetSlideshowLength();
 };
 
 const cShowPreviousSlideshowImage = () => {
@@ -121,6 +143,10 @@ class MImages {
         return this.array;
     }
 
+    // getImagesArrayLength() {
+    //     return this.array.length;
+    // }
+
     getShownImage() {
         return this.shownImage;
     }
@@ -135,6 +161,10 @@ const mCreateSlideshow = (arrayOfImages, shownImage) => {
 const mGetSlideshow = () => {
     return mSlideshow.getImagesArray();
 };
+
+// const mGetSlideshowLength = () => {
+//     return mSlideshow.getImagesArrayLength();
+// };
 
 const mGetSlideshowShownImage = () => {
     return mSlideshow.getShownImage();
@@ -178,8 +208,6 @@ let arrayOfImages = [
     {src: "./img/banner-3.png", alt: "banner-17"},
     {src: "./img/banner-0.png", alt: "banner-18"},
     {src: "./img/banner-1.png", alt: "banner-19"},
-]
+];
 
 let slideshowImages = cCreateSlideshow(arrayOfImages, 1);
-// let slideshowLeftButton = document.querySelector(".slideshow__button_left");
-//     console.log(slideshowLeftButton); 
