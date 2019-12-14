@@ -1,10 +1,9 @@
 "use strict"
 
-// view => slideshow.js
-const vShowImage = () => {
-    
-};
+// обработать ошибки при вызове функции контроллера, к. создает слайдшоу
+// сделать дозированность изображений в слайдшоу
 
+// view => slideshow.js
 const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
     let mainContent = document.querySelector(".main-content");
 
@@ -16,20 +15,21 @@ const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
     slideshowContainer.className = "slideshow__container slideshow__container_theme_original";
     slideshow.append(slideshowContainer);
 
-    let slideshowImgContainer = document.createElement("div");
-    slideshowImgContainer.className = "slideshow__img-container slideshow__img-container_theme_original";
-    slideshowContainer.append(slideshowImgContainer);
-
-    arrayOfImages.forEach( (image, imageNumber) => {
-        let slideshowImg = document.createElement("img");
+    arrayOfImages.forEach( function(image, imageNumber) {
+        let slideshowImgContainer = document.createElement("div");
 
         if (imageNumber == shownImageNumber) {
-            slideshowImg.className = "slideshow__img-container slideshow__img-container_theme_original slideshow__img-container_show"
+            slideshowImgContainer.className = "slideshow__img-container slideshow__img-container_theme_original slideshow__img-container_show"
         } else {
-            slideshowImg.className = "slideshow__img slideshow__img_theme_original";
+            slideshowImgContainer.className = "slideshow__img-container slideshow__img-container_theme_original";
         }
-        
-        for (attributeName in image) {
+
+        slideshowContainer.append(slideshowImgContainer);
+
+        let slideshowImg = document.createElement("img");
+        slideshowImg.className = "slideshow__img slideshow__img_theme_original";
+
+        for (let attributeName in image) {
             slideshowImg.setAttribute(attributeName, image[attributeName]);
         }
         
@@ -39,7 +39,45 @@ const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
     let slideshowButtonLeft = document.createElement("button");
     slideshowButtonLeft.className = "slideshow__button slideshow__button_theme_original slideshow__button_left";
     slideshowContainer.append(slideshowButtonLeft);
+
+    let leftButtonImg = document.createElement("img");
+    leftButtonImg.className = "slideshow__img slideshow__img_theme_original";
+    leftButtonImg.setAttribute("src", "./img/arrow-left.png");
+    leftButtonImg.setAttribute("alt", "arrow-left");
+    slideshowButtonLeft.append(leftButtonImg);
+
+    let slideshowButtonRight = document.createElement("button");
+    slideshowButtonRight.className = "slideshow__button slideshow__button_theme_original slideshow__button_right";
+    slideshowContainer.append(slideshowButtonRight);
+
+    let rightButtonImg = document.createElement("img");
+    rightButtonImg.className = "slideshow__img slideshow__img_theme_original";
+    rightButtonImg.setAttribute("src", "./img/arrow-left.png");
+    rightButtonImg.setAttribute("alt", "arrow-right");
+    slideshowButtonRight.append(rightButtonImg);
 };
+
+const vShowSlideshowImage = (imageToShow) => {
+    let currentShownImageContainer = document.querySelector(".slideshow__img-container_show");
+    currentShownImageContainer.classList.remove("slideshow__img-container_show");
+
+    let imageContainerToShow = document.querySelectorAll(".slideshow__img-container")[imageToShow];
+    imageContainerToShow.classList.add("slideshow__img-container_show");
+};
+
+const vHangClicksOnSlideshowButtons = () => {
+    let slideshowLeftButton = document.querySelector(".slideshow__button_left");
+    slideshowLeftButton.addEventListener("click", () => {
+        cShowPreviousSlideshowImage();
+    });
+
+    let slideshowRightButton = document.querySelector(".slideshow__button_right"); 
+    slideshowRightButton.addEventListener("click", () => {
+        cShowNextSlideshowImage();
+    });
+};
+
+setTimeout( () => vHangClicksOnSlideshowButtons());
 
 // controller => slideshow.js
 const cCreateSlideshow = (arrayOfImages, shownImage) => {
@@ -49,26 +87,24 @@ const cCreateSlideshow = (arrayOfImages, shownImage) => {
     );
 };
 
-const cShowImage = (imagesObject) => {
-    let currentShownImage = imagesObject.getShownImage();
-    vShowImage(currentShownImage);     
+const cShowPreviousSlideshowImage = () => {
+    mShowPreviousSlideshowImage();
+    let newShownImage = mSlideshow.getShownImage();
+    vShowSlideshowImage(newShownImage);                                     
 };
 
-const cShowPreviousImage = () => {
-    mChangeShownImage(slideshowImages, -1);
-    vShowImage(slideshowImages);                                     
-};
-
-const cShowNextImage = () => {
-    mChangeShownImage(slideshowImages, 1);
-    vShowImage(slideshowImages);     
+const cShowNextSlideshowImage = () => {
+    mShowNextSlideshowImage();
+    let newShownImage = mSlideshow.getShownImage();
+    vShowSlideshowImage(newShownImage);      
 };
 
 // model => slideshow.js 
 class MImages {
     constructor (array, shownImage) {
-        this.array = array || [];
-        this.shownImage = shownImage || null;
+        this.array = array;
+        this.shownImage = shownImage - 1;
+        // обработать эти 2 поля!!! ^
     }
 
     setImageArray(array) {
@@ -76,9 +112,9 @@ class MImages {
     }
 
     setShownImage(imageNumberInArray) {
-        if (this.shownImage == imageNumberInArray) break;
+        if (this.shownImage == imageNumberInArray) return;
 
-        this.shownImage = this.array[imageNumberInArray];
+        this.shownImage = imageNumberInArray;
     }
 
     getImagesArray() {
@@ -104,19 +140,20 @@ const mGetSlideshowShownImage = () => {
     return mSlideshow.getShownImage();
 };
 
-const mChangeShownImage = (imagesObject, number) => {
-    let currentShownImage = imagesObject.getShownImage();
+const mChangeSlideshowImage = (imageToShow) => {
+    mSlideshow.setShownImage(imageToShow);
+};
 
-    if ( ((imagesObject.length - 1) == currentShownImage) && (number == 1) ) {
-        currentShownImage = 0;
-        // telling controller to change view
-        break;
-    }
-    if ( (currentShownImage == 0) && (number == -1) ) {
-        currentShownImage = imagesObject.length - 1;
-        // telling controller to change view
-        break;
-    } 
+const mShowPreviousSlideshowImage = () => {
+    let currentShownImage = mSlideshow.getShownImage();
+    let imageToShow = currentShownImage - 1;
+    mChangeSlideshowImage(imageToShow);
+};
+
+const mShowNextSlideshowImage = () => {
+    let currentShownImage = mSlideshow.getShownImage();
+    let imageToShow = currentShownImage + 1;
+    mChangeSlideshowImage(imageToShow);
 };
 
 // slideshow.js => main.js
@@ -125,37 +162,24 @@ let arrayOfImages = [
     {src: "./img/banner-1.png", alt: "banner-1"},
     {src: "./img/banner-2.png", alt: "banner-2"},
     {src: "./img/banner-3.png", alt: "banner-3"},
-    {src: "./img/banner-0.png", alt: "banner-0"},
-    {src: "./img/banner-1.png", alt: "banner-1"},
-    {src: "./img/banner-2.png", alt: "banner-2"},
-    {src: "./img/banner-3.png", alt: "banner-3"},
-    {src: "./img/banner-0.png", alt: "banner-0"},
-    {src: "./img/banner-1.png", alt: "banner-1"},
-    {src: "./img/banner-0.png", alt: "banner-0"},
-    {src: "./img/banner-1.png", alt: "banner-1"},
-    {src: "./img/banner-2.png", alt: "banner-2"},
-    {src: "./img/banner-3.png", alt: "banner-3"},
-    {src: "./img/banner-0.png", alt: "banner-0"},
-    {src: "./img/banner-1.png", alt: "banner-1"},
-    {src: "./img/banner-2.png", alt: "banner-2"},
-    {src: "./img/banner-3.png", alt: "banner-3"},
-    {src: "./img/banner-0.png", alt: "banner-0"},
-    {src: "./img/banner-1.png", alt: "banner-1"},
+    {src: "./img/banner-0.png", alt: "banner-4"},
+    {src: "./img/banner-1.png", alt: "banner-5"},
+    {src: "./img/banner-2.png", alt: "banner-6"},
+    {src: "./img/banner-3.png", alt: "banner-7"},
+    {src: "./img/banner-0.png", alt: "banner-8"},
+    {src: "./img/banner-1.png", alt: "banner-9"},
+    {src: "./img/banner-0.png", alt: "banner-10"},
+    {src: "./img/banner-1.png", alt: "banner-11"},
+    {src: "./img/banner-2.png", alt: "banner-12"},
+    {src: "./img/banner-3.png", alt: "banner-13"},
+    {src: "./img/banner-0.png", alt: "banner-14"},
+    {src: "./img/banner-1.png", alt: "banner-15"},
+    {src: "./img/banner-2.png", alt: "banner-16"},
+    {src: "./img/banner-3.png", alt: "banner-17"},
+    {src: "./img/banner-0.png", alt: "banner-18"},
+    {src: "./img/banner-1.png", alt: "banner-19"},
 ]
 
 let slideshowImages = cCreateSlideshow(arrayOfImages, 1);
-
-
-
-
-
-
-
-
-
-
-// let slideshowLeftButton = document.querySelector(".slideshow__button_left"); 
-
-// slideshowLeftButton.addEventListener("click", () => {
-//     showPreviousImage();
-// });
+// let slideshowLeftButton = document.querySelector(".slideshow__button_left");
+//     console.log(slideshowLeftButton); 
