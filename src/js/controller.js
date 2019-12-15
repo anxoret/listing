@@ -1,7 +1,4 @@
 "use strict"
-
-// обработать ошибки при вызове функции контроллера, к. создает слайдшоу
-
 // view => slideshow.js
 let vCurrentShownImageNumber;
 let vSlideshowLength;
@@ -64,7 +61,19 @@ const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
     slideshowImg.className = "slideshow__img slideshow__img_theme_original slideshow__img_show";
 
     for (let attributeName in arrayOfImages[shownImageNumber]) {
-        slideshowImg.setAttribute(attributeName, arrayOfImages[shownImageNumber][attributeName]);
+        if ( !(
+                (src in (arrayOfImages[shownImageNumber]) && (alt in (arrayOfImages[shownImageNumber])
+            ) ) {
+            throw new Error("");
+        }
+
+        if (attributeName == "src") {
+            slideshowImg.setAttribute(attributeName, arrayOfImages[shownImageNumber][attributeName]);
+        } else if (attributeName == "alt") {
+            slideshowImg.setAttribute(attributeName, arrayOfImages[shownImageNumber][attributeName]);
+        } else {
+            throw new Error("Invalid attribute name.");
+        }
     }
     
     slideshowImgContainer.append(slideshowImg); 
@@ -77,7 +86,6 @@ const vChangeImgSrcAndAlt = (imageToShow) => {
         slideshowImg.setAttribute("alt", imageToShow["alt"]);
         slideshowImg.classList.add("slideshow__img_show");
     }, 500);
-
 };
 
 const vShowSlideshowImage = (imageToShowNumber) => {
@@ -126,8 +134,24 @@ const vHangClicksOnSlideshowButtons = () => {
 setTimeout( () => vHangClicksOnSlideshowButtons());
 
 // controller => slideshow.js
-const cCreateSlideshow = (arrayOfImages, shownImage) => {
-    mCreateSlideshow(arrayOfImages, shownImage);
+const cCreateSlideshow = (arrayOfImages, shownImageNumber) => {
+    if (Object.prototype.toString.call(arrayOfImages) !== "[object Array]") {
+        throw new Error("Array of images must have a data type Array.");
+    }
+
+    if ( !(arrayOfImages.length) ) {
+        throw new Error("Array of images can not be empty.");
+    }
+
+    if (Object.prototype.toString.call(shownImageNumber) !== "[object Number]") {
+        throw new Error("The second parameter of the function 'cCreateSlideshow' must be a number.");
+    }
+
+    if ( (shownImageNumber > arrayOfImages.length) || (shownImageNumber < 1) ) {
+        throw new Error("Shown image number can not be more or less then array of images.");
+    }
+
+    mCreateSlideshow(arrayOfImages, shownImageNumber);
     vCreateSlideshow(
         mGetSlideshow(), mGetSlideshowShownImageNumber()
     );
@@ -221,6 +245,7 @@ const mShowNextSlideshowImage = () => {
 };
 
 // slideshow.js => main.js
+
 let arrayOfImages = [
     {src: "./img/banner-1.png", alt: "banner-1"},
     {src: "./img/banner-2.png", alt: "banner-2"},
