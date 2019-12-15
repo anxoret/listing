@@ -6,6 +6,16 @@
 // view => slideshow.js
 let vCurrentShownImageNumber;
 let vSlideshowLength;
+let slideshowButtonRight;
+let slideshowButtonLeft;
+
+const makeButtonActive = (button) => {
+    button.style.opacity = "1";
+};
+
+const makeButtonInactive = (button) => {
+    button.style.opacity = "0.7";
+};
 
 const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
     vCurrentShownImageNumber = shownImageNumber;
@@ -21,7 +31,31 @@ const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
     slideshowContainer.className = "slideshow__container slideshow__container_theme_original";
     slideshow.append(slideshowContainer);
 
-    arrayOfImages.forEach( function(image, imageNumber) {
+    slideshowButtonLeft = document.createElement("button");
+    slideshowButtonLeft.className = "slideshow__button slideshow__button_theme_original slideshow__button_left";
+    slideshowContainer.append(slideshowButtonLeft);
+    
+    let leftButtonImg = document.createElement("img");
+    leftButtonImg.className = "slideshow__img slideshow__img_theme_original";
+    leftButtonImg.setAttribute("src", "./img/arrow-left.png");
+    leftButtonImg.setAttribute("alt", "arrow-left");
+    slideshowButtonLeft.append(leftButtonImg);
+
+    slideshowButtonRight = document.createElement("button");
+    slideshowButtonRight.className = "slideshow__button slideshow__button_theme_original slideshow__button_right";
+    slideshowContainer.append(slideshowButtonRight);
+
+    let rightButtonImg = document.createElement("img");
+    rightButtonImg.className = "slideshow__img slideshow__img_theme_original";
+    rightButtonImg.setAttribute("src", "./img/arrow-left.png");
+    rightButtonImg.setAttribute("alt", "arrow-right");
+    slideshowButtonRight.append(rightButtonImg);
+
+    arrayOfImages.forEach( (image, imageNumber) => {
+        if (imageNumber == 0) {
+            makeButtonInactive(slideshowButtonLeft);
+        }
+
         let slideshowImgContainer = document.createElement("div");
 
         if (imageNumber == shownImageNumber) {
@@ -41,26 +75,6 @@ const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
         
         slideshowImgContainer.append(slideshowImg); 
     });
-
-    let slideshowButtonLeft = document.createElement("button");
-    slideshowButtonLeft.className = "slideshow__button slideshow__button_theme_original slideshow__button_left";
-    slideshowContainer.append(slideshowButtonLeft);
-
-    let leftButtonImg = document.createElement("img");
-    leftButtonImg.className = "slideshow__img slideshow__img_theme_original";
-    leftButtonImg.setAttribute("src", "./img/arrow-left.png");
-    leftButtonImg.setAttribute("alt", "arrow-left");
-    slideshowButtonLeft.append(leftButtonImg);
-
-    let slideshowButtonRight = document.createElement("button");
-    slideshowButtonRight.className = "slideshow__button slideshow__button_theme_original slideshow__button_right";
-    slideshowContainer.append(slideshowButtonRight);
-
-    let rightButtonImg = document.createElement("img");
-    rightButtonImg.className = "slideshow__img slideshow__img_theme_original";
-    rightButtonImg.setAttribute("src", "./img/arrow-left.png");
-    rightButtonImg.setAttribute("alt", "arrow-right");
-    slideshowButtonRight.append(rightButtonImg);
 };
 
 const vShowSlideshowImage = (imageToShow) => {
@@ -69,28 +83,42 @@ const vShowSlideshowImage = (imageToShow) => {
 
     let imageContainerToShow = document.querySelectorAll(".slideshow__img-container")[imageToShow];
     imageContainerToShow.classList.add("slideshow__img-container_show");
-};
 
-vCurrentShownImageNumber = shownImageNumber;
-vSlideshowLength = arrayOfImages.length;
+    vCurrentShownImageNumber = imageToShow;
 
-// const vCheckSlideshowImageNumber = (imaNumber) => {
-//     if ()
-// };
+    if (imageToShow == 0) {
+        makeButtonInactive(slideshowButtonLeft);
+    } else {
+        makeButtonActive(slideshowButtonLeft);
+    }
 
-const vStopButtonClickEvent = () => {
-    
+    if (imageToShow == vSlideshowLength - 1) {
+        makeButtonInactive(slideshowButtonRight);
+    } else {
+        makeButtonActive(slideshowButtonRight);
+    }
 };
 
 const vHangClicksOnSlideshowButtons = () => {
     let slideshowLeftButton = document.querySelector(".slideshow__button_left");
     slideshowLeftButton.addEventListener("click", () => {
-        
+        if (vCurrentShownImageNumber == 0) {
+            makeButtonInactive(slideshowLeftButton);
+            return;
+        }
+
+        makeButtonActive(slideshowLeftButton);
         cShowPreviousSlideshowImage();
     });
 
     let slideshowRightButton = document.querySelector(".slideshow__button_right"); 
     slideshowRightButton.addEventListener("click", () => {
+        if (vCurrentShownImageNumber == vSlideshowLength - 1) {
+            makeButtonInactive(slideshowRightButton);
+            return;
+        }
+
+        makeButtonActive(slideshowRightButton);
         cShowNextSlideshowImage();
     });
 };
@@ -143,10 +171,6 @@ class MImages {
         return this.array;
     }
 
-    // getImagesArrayLength() {
-    //     return this.array.length;
-    // }
-
     getShownImage() {
         return this.shownImage;
     }
@@ -161,10 +185,6 @@ const mCreateSlideshow = (arrayOfImages, shownImage) => {
 const mGetSlideshow = () => {
     return mSlideshow.getImagesArray();
 };
-
-// const mGetSlideshowLength = () => {
-//     return mSlideshow.getImagesArrayLength();
-// };
 
 const mGetSlideshowShownImage = () => {
     return mSlideshow.getShownImage();
@@ -188,26 +208,26 @@ const mShowNextSlideshowImage = () => {
 
 // slideshow.js => main.js
 let arrayOfImages = [
-    {src: "./img/banner-0.png", alt: "banner-0"},
+    // {src: "./img/banner-0.png", alt: "banner-0"},
     {src: "./img/banner-1.png", alt: "banner-1"},
     {src: "./img/banner-2.png", alt: "banner-2"},
-    {src: "./img/banner-3.png", alt: "banner-3"},
-    {src: "./img/banner-0.png", alt: "banner-4"},
-    {src: "./img/banner-1.png", alt: "banner-5"},
-    {src: "./img/banner-2.png", alt: "banner-6"},
-    {src: "./img/banner-3.png", alt: "banner-7"},
-    {src: "./img/banner-0.png", alt: "banner-8"},
-    {src: "./img/banner-1.png", alt: "banner-9"},
-    {src: "./img/banner-0.png", alt: "banner-10"},
-    {src: "./img/banner-1.png", alt: "banner-11"},
-    {src: "./img/banner-2.png", alt: "banner-12"},
-    {src: "./img/banner-3.png", alt: "banner-13"},
-    {src: "./img/banner-0.png", alt: "banner-14"},
-    {src: "./img/banner-1.png", alt: "banner-15"},
-    {src: "./img/banner-2.png", alt: "banner-16"},
-    {src: "./img/banner-3.png", alt: "banner-17"},
-    {src: "./img/banner-0.png", alt: "banner-18"},
-    {src: "./img/banner-1.png", alt: "banner-19"},
+    {src: "./img/banner-3.png", alt: "banner-3"}
+    // {src: "./img/banner-0.png", alt: "banner-4"},
+    // {src: "./img/banner-1.png", alt: "banner-5"},
+    // {src: "./img/banner-2.png", alt: "banner-6"},
+    // {src: "./img/banner-3.png", alt: "banner-7"},
+    // {src: "./img/banner-0.png", alt: "banner-8"},
+    // {src: "./img/banner-1.png", alt: "banner-9"},
+    // {src: "./img/banner-0.png", alt: "banner-10"},
+    // {src: "./img/banner-1.png", alt: "banner-11"},
+    // {src: "./img/banner-2.png", alt: "banner-12"},
+    // {src: "./img/banner-3.png", alt: "banner-13"},
+    // {src: "./img/banner-0.png", alt: "banner-14"},
+    // {src: "./img/banner-1.png", alt: "banner-15"},
+    // {src: "./img/banner-2.png", alt: "banner-16"},
+    // {src: "./img/banner-3.png", alt: "banner-17"},
+    // {src: "./img/banner-0.png", alt: "banner-18"},
+    // {src: "./img/banner-1.png", alt: "banner-19"},
 ];
 
 let slideshowImages = cCreateSlideshow(arrayOfImages, 1);
