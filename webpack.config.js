@@ -2,10 +2,11 @@ const path = require("path");
 
 module.exports = {
     entry: {
-        app: "./src/js/main.js"
+        slideshow: "./src/js/slideshow.js"
     },
     output: {
-        filename: "bundle.js",
+        filename: "[name].js",
         path: path.resolve(__dirname, "dist")
-    }
+    },
+    devtool: "source-map"
 };
