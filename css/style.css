@@ -21,9 +21,9 @@
 
 .slideshow__img_theme_original {
   opacity: 0;
-  -webkit-transition: opacity 0.5s;
-  -o-transition: opacity 0.5s;
-  transition: opacity 0.5s; }
+  -webkit-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s;
+  transition: opacity 0.3s; }
 
 .slideshow__img_show {
   opacity: 1; }

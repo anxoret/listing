@@ -60,13 +60,11 @@ const vCreateSlideshow = (arrayOfImages, shownImageNumber) => {
     slideshowImg = document.createElement("img");
     slideshowImg.className = "slideshow__img slideshow__img_theme_original slideshow__img_show";
 
-    for (let attributeName in arrayOfImages[shownImageNumber]) {
-        if ( !(
-                (src in (arrayOfImages[shownImageNumber]) && (alt in (arrayOfImages[shownImageNumber])
-            ) ) {
-            throw new Error("");
-        }
+    if ( !("src" in arrayOfImages[shownImageNumber] && "alt" in arrayOfImages[shownImageNumber]) )  {
+        throw new Error("Objects of arrayOfImages must have src and alt properties.");
+    }
 
+    for (let attributeName in arrayOfImages[shownImageNumber]) {  
         if (attributeName == "src") {
             slideshowImg.setAttribute(attributeName, arrayOfImages[shownImageNumber][attributeName]);
         } else if (attributeName == "alt") {
@@ -85,7 +83,7 @@ const vChangeImgSrcAndAlt = (imageToShow) => {
         slideshowImg.setAttribute("src", imageToShow["src"]);
         slideshowImg.setAttribute("alt", imageToShow["alt"]);
         slideshowImg.classList.add("slideshow__img_show");
-    }, 500);
+    }, 300);
 };
 
 const vShowSlideshowImage = (imageToShowNumber) => {
@@ -247,25 +245,8 @@ const mShowNextSlideshowImage = () => {
 // slideshow.js => main.js
 
 let arrayOfImages = [
-    {src: "./img/banner-1.png", alt: "banner-1"},
+    {src: "./img/banner-4.png", alt: "banner-4"},
     {src: "./img/banner-2.png", alt: "banner-2"},
-    {src: "./img/banner-3.png", alt: "banner-3"},
-    {src: "./img/banner-0.png", alt: "banner-4"},
-    {src: "./img/banner-1.png", alt: "banner-5"},
-    {src: "./img/banner-2.png", alt: "banner-6"},
-    {src: "./img/banner-3.png", alt: "banner-7"},
-    {src: "./img/banner-0.png", alt: "banner-8"},
-    {src: "./img/banner-1.png", alt: "banner-9"},
-    {src: "./img/banner-0.png", alt: "banner-10"},
-    {src: "./img/banner-1.png", alt: "banner-11"},
-    {src: "./img/banner-2.png", alt: "banner-12"},
-    {src: "./img/banner-3.png", alt: "banner-13"},
-    {src: "./img/banner-0.png", alt: "banner-14"},
-    {src: "./img/banner-1.png", alt: "banner-15"},
-    {src: "./img/banner-2.png", alt: "banner-16"},
-    {src: "./img/banner-3.png", alt: "banner-17"},
-    {src: "./img/banner-0.png", alt: "banner-18"},
-    {src: "./img/banner-1.png", alt: "banner-19"},
 ];
 
 let slideshowImages = cCreateSlideshow(arrayOfImages, 1);
